@@ -6,29 +6,30 @@
 /*   By: yu-lin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:47:16 by yu-lin            #+#    #+#             */
-/*   Updated: 2019/06/28 11:27:46 by yu-lin           ###   ########.fr       */
+/*   Updated: 2019/07/02 17:08:36 by yu-lin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+char	*ft_strsub(char const *s, unsigned int start, size_t len);
 
 /*With 2D array*/
-static int	read_line(int fd, char **temp)
+static int	read_line(int fd, char **buffer, int buffer_size)
 {
-	char line[BUFF_SIZE + 1];
-	size_t len;
-	char *newl;
+	char *placeholder;
+	char temp[BUFF_SIZE + 1];
+	ssize_t len;
 
-	len = read(fd, line, BUFF_SIZE);
-	line[len] = '\0';
-	newl = ft_strjoin(*temp, line);
+	len = read(fd, temp, BUFF_SIZE);
+	temp[len] = '\0';
+	placeholder = ft_strjoin(*buffer, buffer_size);
 	free(*temp);
 	free(newl);
 	return (len);
 }
 
 /*With linked lists
-static t_list *get_file(t_list **file, int fd)
+static t_list *get_file(int fd, t_list **file)
 {
 	t_list *temp;
 
@@ -41,8 +42,8 @@ static t_list *get_file(t_list **file, int fd)
 	}
 	temp = ft_lstnew("\0", fd);
 	ft_lstadd(file, temp);
-	return (temp);*/
-}
+	return (temp);
+}*/
 int		get_next_line(const int fd, char **line)
 {
 	static char *temp;
@@ -66,4 +67,15 @@ int		get_next_line(const int fd, char **line)
 	free(temp);
 	temp = ft_strdup(count);
 	return (1);
+}
+
+int		main(int ac, char **av)
+{
+	int fd;
+	char *buffer;
+
+	buffer = (char *)malloc(sizeof(char) * 1024);
+	fd = open(ac[1], O_RDONLY);
+	get_next_line(fd, &buffer);
+	return (0);
 }
