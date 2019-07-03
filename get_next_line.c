@@ -6,76 +6,157 @@
 /*   By: yu-lin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:47:16 by yu-lin            #+#    #+#             */
-/*   Updated: 2019/07/02 17:08:36 by yu-lin           ###   ########.fr       */
+/*   Updated: 2019/07/03 17:16:57 by yu-lin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-char	*ft_strsub(char const *s, unsigned int start, size_t len);
 
-/*With 2D array*/
+/*With 2D array
 static int	read_line(int fd, char **buffer, int buffer_size)
 {
-	char *placeholder;
+	char *holder;
 	char temp[BUFF_SIZE + 1];
-	ssize_t len;
+	ssize_t size;
 
-	len = read(fd, temp, BUFF_SIZE);
-	temp[len] = '\0';
-	placeholder = ft_strjoin(*buffer, buffer_size);
-	free(*temp);
-	free(newl);
-	return (len);
+	size = read(fd, temp, buffer_size);
+	if (size < 1) //if it is an error or output
+		return (size);//the last line
+	temp[size] = '\0';
+	holder = ft_strjoin(*buffer, temp);
+	free(*buffer);
+	*buffer = ft_strdup(holder);
+	return (1);
 }
 
-/*With linked lists
-static t_list *get_file(int fd, t_list **file)
+static char	find_new_line(char *str)
 {
-	t_list *temp;
+	int i;
 
-	temp = *file;
-	while (temp)
+	i = 0;
+	while (str[i] != '\0' && str[i] != '\n')
 	{
-		if ((int)temp->content_size == fd) //What does this mean?
-			return (temp);
-		temp = temp->next;
+		i++;
 	}
-	temp = ft_lstnew("\0", fd);
-	ft_lstadd(file, temp);
-	return (temp);
-}*/
+	return (1);
+}
+
 int		get_next_line(const int fd, char **line)
 {
-	static char *temp;
-	char *count;
+	static char *tmp_buffer;
 	int error;
 
-	temp = NULL;
-	if (temp == NULL)
-		temp = (char *)malloc(sizeof(char));
-	while (ft_strchr(temp, '\n') == NULL)
+	tmp_buffer = NULL;
+	if (tmp_buffer == NULL)
+		tmp_buffer = (char *)malloc(sizeof(char));
+	while (ft_strchr(tmp_buffer, '\n') == NULL)
 	{
-		error = read(fd, &temp);
+		error = read_line(fd, &tmp_buffer, BUFF_SIZE);
 		if (error == 0)
 			return (0);
 		else if (error == -1)
 			return (-1);
 	}
-	*line = ft_strsub(temp, 0, ft_strchr(temp, '\n'));
-	count = ft_strchr(temp, '\n');
-	count++;
-	free(temp);
-	temp = ft_strdup(count);
+	*line = ft_strsub(tmp_buffer, 0, find_new_line(tmp_buffer));
+	tmp_buffer = ft_strchr(tmp_buffer, '\n');
+	tmp_buffer++;
+	return (1);
+}*/
+
+char		*join(char *s1, char *s2)
+{
+	size_t size;
+	char *newstr;
+
+	size = strlen(s1) + strlen(s2);
+	newstr = (char *)malloc(sizeof(char) * size + 1);
+	strcpy(newstr, s1);
+	strcst(newstr, s2);
+	newstr[size] = '\0';
+	return (newstr);
+}
+
+int		read_chunk(int fd, char **buffer, int buffer_size)
+{
+	char *holder;
+	char temp_buffer[buffer_size + 1];
+	ssize_t size;
+
+	size = read(fd. temp_buffer, buffer_size);
+	if (size < 1)
+		return (size);
+	temp_buffer[size] = '\0';
+	holder = join(*buffer, temp_buffer);
+	free(*buffer);
+	*buffer = strdup(holder);
 	return (1);
 }
 
+int		from_where(char *str, char c)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+char	*substr(char *str, int start, int len)
+{
+	char *newstr;
+	int i;
+
+	newstr = (char *)malloc(sizeof(char) * len + 1);
+	i = 0;
+	while (i < len)
+	{
+		newstr[i] = str[start];
+		i++;
+		start++;
+	}
+	newstr[i] = '\0';
+	return (newstr);
+}
+
+int		get_next_line(iiint fd, char **line)
+{
+	static char *buffer = NULL;
+	int error;
+
+	if (buffer == NULL)
+		buffer = (char *)malloc(sizeof(char));
+	while (strchr(buffer, '\n') == NULL)
+	{
+		error = read_line(fd, &buffer, BUFF_SIZE);
+		if (error < 1)
+			return (error);
+	}
+	*line = substr(buffer, 0, from_where(buffer, '\n'));
+	bufer = strchr(buffer, '\n');
+	buffer++;
+	return (1);
+}
 int		main(int ac, char **av)
 {
 	int fd;
 	char *buffer;
+	int i;
 
-	buffer = (char *)malloc(sizeof(char) * 1024);
-	fd = open(ac[1], O_RDONLY);
-	get_next_line(fd, &buffer);
+	if (ac == 2)
+	{
+		i = 0;
+		fd = open(av[1], O_RDONLY);
+		while ((get_next_line(fd, &buffer)) == 1)
+		{
+			ft_putstr(buffer);
+			ft_putchar('\n');
+		}
+		close(fd);
+	}
 	return (0);
 }
