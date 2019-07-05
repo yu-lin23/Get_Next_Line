@@ -6,12 +6,12 @@
 /*   By: yu-lin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 16:45:48 by yu-lin            #+#    #+#             */
-/*   Updated: 2019/06/27 09:23:57 by yu-lin           ###   ########.fr       */
+/*   Updated: 2019/07/03 15:19:35 by yu-lin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE
+# define GET_NEXT_LINE_H
 
 #include <string.h>
 #include <stdlib.h>
