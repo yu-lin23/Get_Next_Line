@@ -6,17 +6,17 @@
 /*   By: yu-lin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:47:16 by yu-lin            #+#    #+#             */
-/*   Updated: 2019/07/09 15:07:43 by yu-lin           ###   ########.fr       */
+/*   Updated: 2019/07/10 10:41:17 by yu-lin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		read_line(int fd, char **tmp_buffer)
+static int			ft_readline(int fd, char **tmp_buffer)
 {
 	char	buffer[BUFF_SIZE + 1];
-	char 	*holder;
-	size_t size;
+	char	*holder;
+	size_t	size;
 
 	size = read(fd, buffer, BUFF_SIZE);
 	buffer[size] = '\0';
@@ -27,9 +27,9 @@ int		read_line(int fd, char **tmp_buffer)
 	return (size);
 }
 
-int		from_where(char *str)
+static size_t		from_where(char *str)
 {
-	int i;
+	size_t	i;
 
 	i = 0;
 	while (str[i] != '\n' && str[i] != '\0')
@@ -37,10 +37,10 @@ int		from_where(char *str)
 	return (i);
 }
 
-int		ft_putline(char **str, char **line, int fd, int result)
+static int			ft_putline(char **str, char **line, int fd, int result)
 {
-	char *placeholder;
-	size_t i;
+	char	*placeholder;
+	size_t	i;
 
 	i = from_where(str[fd]);
 	if (str[fd][i] == '\n')
@@ -62,39 +62,21 @@ int		ft_putline(char **str, char **line, int fd, int result)
 	return (1);
 }
 
-int		get_next_line(const int fd, char **line)
+int					get_next_line(const int fd, char **line)
 {
-	static char *tmp_buffer[1024];
-	int result;
+	static char	*tmp_buffer[1024];
+	int			result;
 
 	if (tmp_buffer[fd] == NULL)
 		tmp_buffer[fd] = (char*)ft_memalloc(sizeof(char));
 	while (ft_strchr(tmp_buffer[fd], '\n') == NULL)
 	{
-		result = read_line(fd, tmp_buffer);
+		result = ft_readline(fd, tmp_buffer);
 		if (result < 0)
 			return (-1);
-		else if (result == 0 && (tmp_buffer[fd] == NULL || tmp_buffer[fd][0] == '\0'))
+		else if (result == 0 && (tmp_buffer[fd] == NULL
+					|| tmp_buffer[fd][0] == '\0'))
 			return (0);
 	}
 	return (ft_putline(tmp_buffer, line, fd, result));
-}
-
-int		main(int ac, char **av)
-{
-	int fd;
-	char *buffer = (char *)malloc(sizeof(char) * 1024);
-
-	if (ac == 1)
-		return (0);
-	else if (ac == 2)
-		fd = open(av[1], O_RDONLY);
-	while (get_next_line(fd, &buffer)	> 0)
-	{
-		ft_putendl(buffer);
-		free(buffer);
-	}
-	if (ac == 2)
-		close(fd);
-	return (0);
 }

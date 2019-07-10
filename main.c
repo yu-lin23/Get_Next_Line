@@ -1,21 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yu-lin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/06/26 16:45:48 by yu-lin            #+#    #+#             */
-/*   Updated: 2019/07/10 09:49:43 by yu-lin           ###   ########.fr       */
+/*   Created: 2019/07/10 08:19:17 by yu-lin            #+#    #+#             */
+/*   Updated: 2019/07/10 10:36:21 by yu-lin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-# include "./libft/libft.h"
-# include <fcntl.h>
-# define BUFF_SIZE 32
+#include "get_next_line.h"
 
-int		get_next_line(const int fd, char **line);
+int		main(int ac, char **av)
+{
+	int		fd;
+	char	*buffer;
 
-#endif
+	if (ac == 1)
+		return (0);
+	else if (ac == 2)
+		fd = open(av[1], O_RDONLY);
+	while (get_next_line(fd, &buffer) > 0)
+	{
+		ft_putendl(buffer);
+		free(buffer);
+	}
+	if (ac == 2)
+		close(fd);
+	return (0);
+}
