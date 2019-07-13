@@ -6,7 +6,7 @@
 /*   By: yu-lin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:47:16 by yu-lin            #+#    #+#             */
-/*   Updated: 2019/07/10 17:36:31 by yu-lin           ###   ########.fr       */
+/*   Updated: 2019/07/13 13:41:27 by yu-lin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,18 @@
 
 static int			ft_readline(int fd, char **tmp_buffer)
 {
-	char	buffer[BUFF_SIZE + 1];
+	char	*buffer;
 	char	*holder;
 	int		size;
 
+	buffer = (char*)malloc(sizeof(char) * BUFF_SIZE + 1);
 	size = read(fd, buffer, BUFF_SIZE);
 	buffer[size] = '\0';
 	holder = ft_strjoin(tmp_buffer[fd], buffer);
 	ft_strdel(&tmp_buffer[fd]);
 	tmp_buffer[fd] = ft_strdup(holder);
 	ft_strdel(&holder);
+	free(buffer);
 	return (size);
 }
 
