@@ -6,7 +6,7 @@
 /*   By: yu-lin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/26 14:47:16 by yu-lin            #+#    #+#             */
-/*   Updated: 2019/07/13 13:41:27 by yu-lin           ###   ########.fr       */
+/*   Updated: 2019/07/17 13:17:42 by yu-lin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@ static int			ft_putline(char **str, char **line, int fd, int result)
 	char	*placeholder;
 	size_t	i;
 
-	if (fd < 0 || !line)
-		return (-1);
 	i = from_where(str[fd]);
 	if (str[fd][i] == '\n')
 	{
@@ -68,11 +66,11 @@ static int			ft_putline(char **str, char **line, int fd, int result)
 
 int					get_next_line(const int fd, char **line)
 {
-	static char	*tmp_buffer[1024];
+	static char	*tmp_buffer[1025];
 	int			result;
 
 	result = 1;
-	if (fd < 0 || !line)
+	if (read(fd, (void *)0x0, 0) == -1 || !line)
 		return (-1);
 	if (tmp_buffer[fd] == NULL)
 		tmp_buffer[fd] = (char*)ft_memalloc(sizeof(char));
